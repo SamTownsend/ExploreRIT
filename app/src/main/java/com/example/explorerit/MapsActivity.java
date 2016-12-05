@@ -56,4 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return new LatLng(Math.random() * (MAX_LAT - MIN_LAT) + MIN_LAT,
                 Math.random() * (MAX_LONG - MIN_LONG) + MIN_LONG);
     }
+
+    public void onSucc(){
+        System.out.println("You will never get the succ");
+    }
 }
