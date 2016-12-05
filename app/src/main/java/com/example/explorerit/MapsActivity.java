@@ -48,6 +48,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
     }
 
+    /**
+     * Creates and returns a random location within a predetermined rectangle on campus
+     * @return A randomized LatLng coordinate
+     */
     public LatLng getRandomLocation(){
         return new LatLng(Math.random() * (MAX_LAT - MIN_LAT) + MIN_LAT,
                 Math.random() * (MAX_LONG - MIN_LONG) + MIN_LONG);
