@@ -14,6 +14,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
+    private LatLng home;
+
+    /*Values for random coordinates on the RIT campus to be chosen between*/
+    private final double MIN_LAT = 43.082979;
+    private final double MAX_LAT = 43.086787;
+    private final double MIN_LONG = -77.681430;
+    private final double MAX_LONG = -77.667284;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,19 +36,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * This is where we can add markers or lines, add listeners or move the camera
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        home = new LatLng(43.084644, -77.679988);
+        mMap.addMarker(new MarkerOptions().position(home).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
     }
 }
