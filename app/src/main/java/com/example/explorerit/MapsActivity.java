@@ -2,6 +2,7 @@ package com.example.explorerit;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Math.random() * (MAX_LONG - MIN_LONG) + MIN_LONG);
     }
 
-    public void onSucc(){
+    public void onSucc(View view){
         System.out.println("You will never get the succ");
     }
 }
