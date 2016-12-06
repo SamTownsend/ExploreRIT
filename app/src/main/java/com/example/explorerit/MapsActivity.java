@@ -11,6 +11,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -21,9 +22,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
 
     /**
-     * The target location for the user to get to
+     * The target location for the user to get to with a marker in the same spot
      */
     private LatLng target;
+    private Marker trgtMarker;
+
+    /**
+     * Keeps track of whether or not a new target should be generated
+     */
+    private boolean buttonClickable = true;
 
     /**
      * Values for random coordinates on the RIT campus to be chosen between
@@ -70,7 +77,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
 
         target = CENTER;
-        mMap.addMarker(new MarkerOptions().position(target).title("Next Destination"));
+        trgtMarker = mMap.addMarker(new MarkerOptions().position(target).title("Next Destination"));
+        trgtMarker.setDraggable(false);
+        trgtMarker.setVisible(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(target));
     }
 
@@ -87,9 +96,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * An event handler for the button
      * @param view It's required
      */
-    public void onSucc(View view){
-        //home = getRandomLocation();
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(target , 15.0f) );
-        System.out.println("You will never get the succ");
+    public void onButtonClick(View view){
+        if(buttonClickable) {
+            target = getRandomLocation();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+            trgtMarker.setPosition(target);
+            trgtMarker.setVisible(true);
+            buttonClickable = false;
+        }
+        else
+            System.out.println("Must get to your target first!");
     }
 }
