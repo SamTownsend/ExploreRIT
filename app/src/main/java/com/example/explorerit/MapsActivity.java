@@ -1,9 +1,11 @@
 package com.example.explorerit;
 
+import android.content.pm.ActivityInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,9 +25,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final double MIN_LONG = -77.681430;
     private final double MAX_LONG = -77.667284;
 
+    private final LatLng center = new LatLng((MAX_LAT + MIN_LAT) / 2, (MAX_LONG + MIN_LONG) / 2);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -43,9 +48,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        home = new LatLng(43.084644, -77.679988);
-        mMap.addMarker(new MarkerOptions().position(getRandomLocation()).title("Next Destination"));
+        mMap.setMinZoomPreference(15);
+        //home = new LatLng(43.084644, -77.679988);
+        home = center;
+        mMap.addMarker(new MarkerOptions().position(home).title("Next Destination"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
     }
 
@@ -59,6 +65,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onSucc(View view){
+        //home = getRandomLocation();
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(home , 14.0f) );
         System.out.println("You will never get the succ");
     }
 }
