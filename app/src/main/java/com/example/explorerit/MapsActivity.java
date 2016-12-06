@@ -11,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -20,12 +21,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng home;
 
     /*Values for random coordinates on the RIT campus to be chosen between*/
-    private final double MIN_LAT = 43.082979;
-    private final double MAX_LAT = 43.086787;
-    private final double MIN_LONG = -77.681430;
-    private final double MAX_LONG = -77.667284;
+    private static final double MIN_LAT = 43.082979;
+    private static final double MAX_LAT = 43.086787;
+    private static final double MIN_LONG = -77.681430;
+    private static final double MAX_LONG = -77.667284;
 
-    private final LatLng center = new LatLng((MAX_LAT + MIN_LAT) / 2, (MAX_LONG + MIN_LONG) / 2);
+    private static final LatLng CENTER = new LatLng(((MAX_LAT + MIN_LAT) / 2) - .001000
+            , ((MAX_LONG + MIN_LONG) / 2) - .001000);
+
+    private static final LatLngBounds BOUNDARY = new LatLngBounds(new LatLng(MIN_LAT, MIN_LONG),
+            new LatLng(MAX_LAT, MAX_LONG));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +54,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         mMap.setMinZoomPreference(15);
+        mMap.setMaxZoomPreference(19);
+        mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
         //home = new LatLng(43.084644, -77.679988);
-        home = center;
+        home = CENTER;
         mMap.addMarker(new MarkerOptions().position(home).title("Next Destination"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
     }
@@ -66,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onSucc(View view){
         //home = getRandomLocation();
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(home , 14.0f) );
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(home , 15.0f) );
         System.out.println("You will never get the succ");
     }
 }
