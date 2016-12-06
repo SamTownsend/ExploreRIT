@@ -1,10 +1,16 @@
 package com.example.explorerit;
 
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,17 +26,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * The GoogleMap object
      */
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
 
     /**
      * The target location for the user to get to with a marker in the same spot
      */
+
+    private Location myLocation;
     private LatLng target;
     private Marker trgtMarker;
+    private int score;
 
     /**
      * Keeps track of whether or not a new target should be generated
      */
     private boolean buttonClickable = true;
+    private TextView display;
 
     /**
      * Values for random coordinates on the RIT campus to be chosen between
@@ -71,11 +82,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        display = (TextView) findViewById(R.id.scoreDisplay);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
         mMap.setMinZoomPreference(15);
         mMap.setMaxZoomPreference(19);
         mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
-
         target = CENTER;
         trgtMarker = mMap.addMarker(new MarkerOptions().position(target).title("Next Destination"));
         trgtMarker.setDraggable(false);
@@ -83,6 +97,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(target));
     }
 
+    public void atLocation(){
+        if (Math.abs(myLocation.getLatitude() - target.latitude) < .0004 &&
+            Math.abs(myLocation.getLongitude() - target.longitude) < .0004){ //within ~150 feet of target
+            score += 10;
+            display.setText("Score: " + score);
+            target = getRandomLocation();
+            trgtMarker.setPosition(target);
+        }
+        else {
+            System.out.println("You must get to the target first!");
+        }
+    }
     /**
      * Creates and returns a random location within a predetermined rectangle on campus
      * @return A randomized LatLng coordinate
@@ -102,9 +128,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(target));
             trgtMarker.setPosition(target);
             trgtMarker.setVisible(true);
-            buttonClickable = false;
+            display.setText("Score: " + score);
+            score += 10;
+            //buttonClickable = false;
         }
         else
-            System.out.println("Must get to your target first!");
+            atLocation();
     }
 }
